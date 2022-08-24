@@ -36,7 +36,7 @@ public class Employee{
         this.employeeEmail = employeeEmail;
     }
 
-    public Employee update(EmployeeDto detailsToUpdate){
+    public Employee update(Employee detailsToUpdate){
         this.setEmployeeFirstName(detailsToUpdate.getEmployeeFirstName());
         this.setEmployeeLastName(detailsToUpdate.getEmployeeLastName());
         this.setEmployeeEmail(detailsToUpdate.getEmployeeEmail());

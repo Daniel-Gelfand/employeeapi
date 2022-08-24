@@ -4,7 +4,6 @@ package com.example.employeeapi.controller;
 import com.example.employeeapi.pojo.Employee;
 import com.example.employeeapi.pojo.dto.EmployeeDto;
 import com.example.employeeapi.service.EmployeeService;
-import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,13 +32,17 @@ public class EmployeeController {
 
     @PutMapping("/{id}")
     ResponseEntity<Employee> updateEmployee(@RequestBody EmployeeDto employeeToUpdateDto, @PathVariable Long id){
-        return ResponseEntity.ok().body(employeeService.updateEmployee(employeeToUpdateDto,id));
+        Employee employee = employeeService.updateEmployee(employeeToUpdateDto,id);
+
+        return ResponseEntity.ok().body(employee);
     }
 
 
     @PostMapping
     ResponseEntity<Employee> insertEmployee(@RequestBody EmployeeDto newEmployeeDto){
-        return ResponseEntity.ok().body(employeeService.insertNewEmployee(newEmployeeDto));
+        Employee employee = employeeService.insertNewEmployee(newEmployeeDto);
+
+        return ResponseEntity.ok().body(employee);
     }
 
 

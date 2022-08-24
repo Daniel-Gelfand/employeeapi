@@ -2,6 +2,7 @@ package com.example.employeeapi.configuration;
 
 
 import com.example.employeeapi.pojo.Employee;
+import com.example.employeeapi.pojo.dto.EmployeeDto;
 import com.example.employeeapi.repository.EmployeeRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
@@ -26,7 +27,12 @@ public class MySQLConfiguration {
             Employee employee4 = Employee.builder().employeeEmail("fakeemail2@gmail.com").employeeFirstName("Nvidia").employeeLastName("Asus").build();
             Employee employee5 = Employee.builder().employeeEmail("intel@amd.com").employeeFirstName("Intel").employeeLastName("Amd").build();
 
+
+
+
+
             employeeRepository.saveAll(List.of(employee1,employee2,employee3,employee4,employee5));
+
         };
     }
 }

@@ -6,12 +6,12 @@ import com.example.employeeapi.pojo.Employee;
 import com.example.employeeapi.pojo.dto.EmployeeDto;
 import com.example.employeeapi.repository.EmployeeRepository;
 import com.example.employeeapi.utils.Constant;
+import com.example.employeeapi.utils.EmployeeConvertor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
+
 
 
 @Service
@@ -21,27 +21,29 @@ public class EmployeeServiceImp implements EmployeeService {
     @Autowired
     EmployeeRepository employeeRepository;
 
+    EmployeeConvertor employeeConvertor;
+
 
     @Override
     public List<Employee> getAllEmployees() {
-        List<Employee> employees =
-                StreamSupport.stream(employeeRepository.findAll().spliterator(),false).collect(Collectors.toList());
-        return employees;
+
+        List<Employee> employeeList = employeeRepository.findAll();
+        return employeeList;
     }
 
     @Override
     public Employee getEmployeeByEmail(String employeeEmail) {
-        com.example.employeeapi.pojo.Employee employee = employeeRepository
+
+        return employeeRepository
                 .getEmployeesByEmployeeEmail(employeeEmail)
                 .orElseThrow(()->
                         new EmployeeNotFoundException(
                                 String.format(Constant.NOT_FOUND_MESSAGE,"Email",employeeEmail)));
-
-        return employee;
     }
 
     @Override
     public Employee updateEmployee(EmployeeDto employeeToUpdate, Long id) {
+
 //        if (employeeRepository.existsById(id)){
 //            employeeRepository.findEmployeeById(id).map(employee -> employeeRepository.save(employee.update(employeeToUpdate))).orElseThrow(()-> new EmployeeNotFoundException(String.format(Constant.NOT_FOUND_MESSAGE,"id",id)));
 //        }
@@ -49,20 +51,29 @@ public class EmployeeServiceImp implements EmployeeService {
 //            throw new EmployeeNotFoundException(String.format(Constant.NOT_FOUND_MESSAGE,"id",id));
 //        }
 
-        //return employeeRepository.findEmployeeById(id).map(employee -> employeeRepository.save(employee.update(employeeToUpdate))).orElseThrow(()-> new EmployeeNotFoundException(String.format(Constant.NOT_FOUND_MESSAGE,"id",id)));
+        return employeeRepository.findEmployeeById(id)
+                .map(employee -> employeeRepository.save(
+                        employee.update((employeeToUpdate.toEntity()))))
+                .orElseThrow(()-> new EmployeeNotFoundException(String.format(Constant.NOT_FOUND_MESSAGE,"id",id)));
 
-        return null;
+//        return employeeRepository.findEmployeeById(id)
+//                .map(employee ->
+//                        employeeRepository.save(employee.update(employeeToUpdate))).orElseThrow(()-> new EmployeeNotFoundException(String.format(Constant.NOT_FOUND_MESSAGE,"id",id)));
     }
 
 
-    //TODO: finish it with dto
     @Override
     public Employee insertNewEmployee(EmployeeDto employeeDto) {
-//        if (employeeRepository.existsByEmployeeEmail(employeeDto.getEmployeeEmail())){
-//            throw new EmployeeAlreadyExistsException(String.format(Constant.ALREADY_EXISTS_MESSAGE,"email", employeeDto.getEmployeeEmail()));
-//        }
-        //TODO: check maybe the id OR create DTO object
-        //return employeeRepository.save(employeeDto);
-        return null;
+        if (employeeRepository.existsByEmployeeEmail(employeeDto.getEmployeeEmail())){
+            throw new EmployeeAlreadyExistsException(String.format(Constant.ALREADY_EXISTS_MESSAGE,"email", employeeDto.getEmployeeEmail()));
+        }
+
+        //TODO: ask why it not working?
+
+//        Employee employee = employeeConvertor.convertEmployeeDto(employeeDto);
+//        return employeeRepository.save(employee);
+
+        Employee employee = employeeDto.toEntity();
+        return employeeRepository.save(employee);
     }
 }

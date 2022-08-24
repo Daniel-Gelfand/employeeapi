@@ -3,32 +3,35 @@ package com.example.employeeapi.pojo.dto;
 import com.example.employeeapi.pojo.Employee;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import lombok.Data;
 import lombok.Value;
 
-@Value
-@JsonPropertyOrder({"employeeFirstName","employeeLastName","employeeEmail"})
+@Data
 public class EmployeeDto {
 
+    private String employeeFirstName;
 
-    @JsonIgnore
-    private Employee employee;
+    private String employeeLastName;
 
+    private String employeeEmail;
 
-    public String getEmployeeFirstName(){
-        return String.format("%s", employee.getEmployeeFirstName());
-    }
-
-    public String getEmployeeLastName(){
-        return String.format("%s",employee.getEmployeeLastName());
-    }
-
-    public String getEmployeeEmail(){
-        return String.format("%s",employee.getEmployeeEmail());
-    }
-
-
-    public void setEmployeeEmail(EmployeeDto employeeToSet){
+    public EmployeeDto(){
 
     }
 
+    public EmployeeDto(Employee employee) {
+        this.employeeFirstName = employee.getEmployeeFirstName();
+        this.employeeLastName = employee.getEmployeeLastName();
+        this.employeeEmail = employee.getEmployeeEmail();
+
+    }
+
+    public Employee toEntity(){
+        Employee employee = Employee.builder()
+                .employeeEmail(this.getEmployeeEmail())
+                .employeeFirstName(this.getEmployeeFirstName())
+                .employeeLastName(this.getEmployeeLastName())
+                .build();
+        return employee;
+    }
 }
