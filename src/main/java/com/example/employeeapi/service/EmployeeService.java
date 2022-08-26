@@ -13,7 +13,7 @@ public interface EmployeeService {
 
     Employee getEmployeeByEmail(String employeeEmail);
 
-    Employee updateEmployee(EmployeeDto employeeToUpdateDto, Long id);
+    Employee updateEmployee(EmployeeDto employeeToUpdateDto, String employeeEmail);
 
     Employee insertNewEmployee(EmployeeDto newEmployee);
 

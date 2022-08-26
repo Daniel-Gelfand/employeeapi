@@ -20,7 +20,7 @@ public class EmployeeAdvice {
 
     @ExceptionHandler(EmployeeConflictException.class)
     public ResponseEntity<Object> employeeConflictHandler(EmployeeConflictException ece) {
-        return new ResponseEntity<>(getStringMessage(ece.getMessage()), HttpStatus.CONFLICT);
+        return new ResponseEntity<>(getStringMessage(ece.getMessage()), HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
     @ExceptionHandler(EmployeeGeneralException.class)
@@ -29,13 +29,11 @@ public class EmployeeAdvice {
     }
 
 
-    //TODO: ASK FOR HTTP STATUS
     @ExceptionHandler(EmployeeAlreadyExistsException.class)
     public ResponseEntity<Object> employeeAlreadyExistsHandler(EmployeeAlreadyExistsException eaee) {
         return new ResponseEntity<>(getStringMessage(eaee.getMessage()), HttpStatus.ALREADY_REPORTED);
     }
 
-    //TODO: ASK QUESTION ABOUT THAT
     private Map<String, Object> getStringMessage(String message) {
         Map<String, Object> body = new LinkedHashMap<>();
 

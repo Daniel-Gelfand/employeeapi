@@ -5,6 +5,7 @@ import com.example.employeeapi.pojo.Employee;
 import com.example.employeeapi.pojo.dto.EmployeeDto;
 import com.example.employeeapi.repository.EmployeeRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Marker;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,7 +15,6 @@ import java.util.List;
 @Configuration
 @Slf4j
 public class MySQLConfiguration {
-
 
     @Bean
     CommandLineRunner runner(EmployeeRepository employeeRepository) {
@@ -28,11 +28,9 @@ public class MySQLConfiguration {
             Employee employee5 = Employee.builder().employeeEmail("intel@amd.com").employeeFirstName("Intel").employeeLastName("Amd").build();
 
 
-
-
-
             employeeRepository.saveAll(List.of(employee1,employee2,employee3,employee4,employee5));
 
+            log.info("Adding default data to database");
         };
     }
 }

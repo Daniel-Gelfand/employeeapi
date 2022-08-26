@@ -1,7 +1,6 @@
 package com.example.employeeapi.pojo;
 
 
-import com.example.employeeapi.pojo.dto.EmployeeDto;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,7 +16,7 @@ public class Employee{
     @Id
     @GeneratedValue
     @Column(name = "ID")
-    private Long id;
+    private Long employeeID;
 
     @Column(name = "FIRST_NAME",nullable = false)
     private String employeeFirstName;

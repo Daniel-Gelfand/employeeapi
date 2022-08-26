@@ -4,9 +4,9 @@ import com.example.employeeapi.pojo.Employee;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Data;
-import lombok.Value;
+import lombok.NoArgsConstructor;
 
-@Data
+@Data @NoArgsConstructor
 public class EmployeeDto {
 
     private String employeeFirstName;
@@ -15,9 +15,9 @@ public class EmployeeDto {
 
     private String employeeEmail;
 
-    public EmployeeDto(){
-
-    }
+//    public EmployeeDto(){
+//
+//    }
 
     public EmployeeDto(Employee employee) {
         this.employeeFirstName = employee.getEmployeeFirstName();
@@ -26,6 +26,7 @@ public class EmployeeDto {
 
     }
 
+    //TODO: DELETE THIS AND USE CONVERTOR CLASS
     public Employee toEntity(){
         Employee employee = Employee.builder()
                 .employeeEmail(this.getEmployeeEmail())

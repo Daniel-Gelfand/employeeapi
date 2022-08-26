@@ -4,6 +4,7 @@ package com.example.employeeapi.controller;
 import com.example.employeeapi.pojo.Employee;
 import com.example.employeeapi.pojo.dto.EmployeeDto;
 import com.example.employeeapi.service.EmployeeService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,14 +12,11 @@ import java.util.List;
 
 @RequestMapping("/employee")
 @RestController
+@CrossOrigin(origins = "*")
 public class EmployeeController {
 
-
-    private final EmployeeService employeeService;
-
-    public EmployeeController(EmployeeService employeeService) {
-        this.employeeService = employeeService;
-    }
+    @Autowired
+    private  EmployeeService employeeService;
 
     @GetMapping
     ResponseEntity<List<Employee>> getAllEmployees(){
@@ -30,20 +28,14 @@ public class EmployeeController {
         return ResponseEntity.ok().body(employeeService.getEmployeeByEmail(employeeEmail));
     }
 
-    @PutMapping("/{id}")
-    ResponseEntity<Employee> updateEmployee(@RequestBody EmployeeDto employeeToUpdateDto, @PathVariable Long id){
-        Employee employee = employeeService.updateEmployee(employeeToUpdateDto,id);
-
-        return ResponseEntity.ok().body(employee);
+    @PutMapping("/{employeeEmail}")
+    ResponseEntity<Employee> updateEmployee(@RequestBody EmployeeDto employeeToUpdateDto, @PathVariable String employeeEmail){
+        return ResponseEntity.ok().body(employeeService.updateEmployee(employeeToUpdateDto,employeeEmail));
     }
-
 
     @PostMapping
     ResponseEntity<Employee> insertEmployee(@RequestBody EmployeeDto newEmployeeDto){
-        Employee employee = employeeService.insertNewEmployee(newEmployeeDto);
-
-        return ResponseEntity.ok().body(employee);
+        return ResponseEntity.ok().body(employeeService.insertNewEmployee(newEmployeeDto));
     }
-
 
 }

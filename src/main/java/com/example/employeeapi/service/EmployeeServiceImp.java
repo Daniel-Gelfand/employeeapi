@@ -1,6 +1,7 @@
 package com.example.employeeapi.service;
 
 import com.example.employeeapi.exception.EmployeeAlreadyExistsException;
+import com.example.employeeapi.exception.EmployeeConflictException;
 import com.example.employeeapi.exception.EmployeeNotFoundException;
 import com.example.employeeapi.pojo.Employee;
 import com.example.employeeapi.pojo.dto.EmployeeDto;
@@ -15,20 +16,21 @@ import java.util.List;
 
 
 @Service
+
 public class EmployeeServiceImp implements EmployeeService {
 
 
+    //TODO: CHANGE TO SETTER
     @Autowired
     EmployeeRepository employeeRepository;
 
+    @Autowired
     EmployeeConvertor employeeConvertor;
-
 
     @Override
     public List<Employee> getAllEmployees() {
 
-        List<Employee> employeeList = employeeRepository.findAll();
-        return employeeList;
+        return employeeRepository.findAll();
     }
 
     @Override
@@ -42,38 +44,44 @@ public class EmployeeServiceImp implements EmployeeService {
     }
 
     @Override
-    public Employee updateEmployee(EmployeeDto employeeToUpdate, Long id) {
+    public Employee updateEmployee(EmployeeDto employeeToUpdateDto, String employeeEmail) {
+        validation(employeeToUpdateDto);
+        return employeeRepository.findEmployeeByEmployeeEmail(employeeEmail)
+                .map(employee -> employeeRepository.save(employee.update(employeeConvertor.convertEmployeeDto(employeeToUpdateDto))))
+                .orElseThrow(()-> new EmployeeNotFoundException(String.format(Constant.NOT_FOUND_MESSAGE,"Email",employeeEmail)));
 
-//        if (employeeRepository.existsById(id)){
-//            employeeRepository.findEmployeeById(id).map(employee -> employeeRepository.save(employee.update(employeeToUpdate))).orElseThrow(()-> new EmployeeNotFoundException(String.format(Constant.NOT_FOUND_MESSAGE,"id",id)));
-//        }
-//        else {
-//            throw new EmployeeNotFoundException(String.format(Constant.NOT_FOUND_MESSAGE,"id",id));
-//        }
-
-        return employeeRepository.findEmployeeById(id)
-                .map(employee -> employeeRepository.save(
-                        employee.update((employeeToUpdate.toEntity()))))
-                .orElseThrow(()-> new EmployeeNotFoundException(String.format(Constant.NOT_FOUND_MESSAGE,"id",id)));
-
-//        return employeeRepository.findEmployeeById(id)
-//                .map(employee ->
-//                        employeeRepository.save(employee.update(employeeToUpdate))).orElseThrow(()-> new EmployeeNotFoundException(String.format(Constant.NOT_FOUND_MESSAGE,"id",id)));
     }
-
 
     @Override
     public Employee insertNewEmployee(EmployeeDto employeeDto) {
+        validation(employeeDto);
+
+        return employeeRepository.save(employeeConvertor.convertEmployeeDto(employeeDto));
+    }
+
+
+    private void validation(EmployeeDto employeeDto){
+
+        String regexPattern = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
+                + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
+
+        if ( employeeDto.getEmployeeFirstName()==null){
+            throw new EmployeeConflictException(String.format("you must employee first name"));
+        }
+
+        if (employeeDto.getEmployeeLastName()==null){
+            throw new EmployeeConflictException("you must employee last name");
+        }
+
+        if (employeeDto.getEmployeeEmail() == null ){
+            throw new EmployeeConflictException(String.format("you must enter valid email"));
+        }
+
+        if (!employeeDto.getEmployeeEmail().matches(regexPattern) ){
+            throw new EmployeeConflictException(String.format("you must enter valid email"));
+        }
         if (employeeRepository.existsByEmployeeEmail(employeeDto.getEmployeeEmail())){
             throw new EmployeeAlreadyExistsException(String.format(Constant.ALREADY_EXISTS_MESSAGE,"email", employeeDto.getEmployeeEmail()));
         }
-
-        //TODO: ask why it not working?
-
-//        Employee employee = employeeConvertor.convertEmployeeDto(employeeDto);
-//        return employeeRepository.save(employee);
-
-        Employee employee = employeeDto.toEntity();
-        return employeeRepository.save(employee);
     }
 }
