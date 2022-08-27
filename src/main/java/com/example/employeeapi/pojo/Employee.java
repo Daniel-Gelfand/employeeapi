@@ -3,14 +3,12 @@ package com.example.employeeapi.pojo;
 
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Data
 @Entity
 @Table(name = "employees")
-@NoArgsConstructor
 public class Employee{
 
     @Id
@@ -27,13 +25,18 @@ public class Employee{
     @Column(name = "EMAIL",nullable = false,unique = true)
     private String employeeEmail;
 
+    public Employee() {
+
+    }
 
     @Builder
-    public Employee(String employeeFirstName, String employeeLastName, String employeeEmail) {
+    public Employee(String employeeFirstName, String employeeLastName, String employeeEmail ) {
         this.employeeFirstName = employeeFirstName;
         this.employeeLastName = employeeLastName;
         this.employeeEmail = employeeEmail;
     }
+
+
 
     public Employee update(Employee detailsToUpdate){
         this.setEmployeeFirstName(detailsToUpdate.getEmployeeFirstName());

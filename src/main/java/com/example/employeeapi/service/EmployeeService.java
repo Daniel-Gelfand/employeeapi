@@ -17,4 +17,6 @@ public interface EmployeeService {
 
     Employee insertNewEmployee(EmployeeDto newEmployee);
 
+    //TODO DELETE
+    void deleteEmployee(String employeeEmail);
 }

@@ -13,6 +13,10 @@ public class EmployeeapiApplication {
         SpringApplication.run(EmployeeapiApplication.class, args);
     }
 
+
+    /*
+        CORS
+     */
     @Bean
     public WebMvcConfigurer configure(){
         return new WebMvcConfigurer() {

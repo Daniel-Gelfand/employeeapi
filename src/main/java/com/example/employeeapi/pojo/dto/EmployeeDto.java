@@ -15,9 +15,7 @@ public class EmployeeDto {
 
     private String employeeEmail;
 
-//    public EmployeeDto(){
-//
-//    }
+    private String employeeNickName;
 
     public EmployeeDto(Employee employee) {
         this.employeeFirstName = employee.getEmployeeFirstName();
@@ -26,13 +24,4 @@ public class EmployeeDto {
 
     }
 
-    //TODO: DELETE THIS AND USE CONVERTOR CLASS
-    public Employee toEntity(){
-        Employee employee = Employee.builder()
-                .employeeEmail(this.getEmployeeEmail())
-                .employeeFirstName(this.getEmployeeFirstName())
-                .employeeLastName(this.getEmployeeLastName())
-                .build();
-        return employee;
-    }
 }

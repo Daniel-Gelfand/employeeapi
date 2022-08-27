@@ -15,8 +15,12 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 public class EmployeeController {
 
+
+    EmployeeService employeeService;
     @Autowired
-    private  EmployeeService employeeService;
+    public void setEmployeeService(EmployeeService employeeService){
+        this.employeeService = employeeService;
+    }
 
     @GetMapping
     ResponseEntity<List<Employee>> getAllEmployees(){
@@ -36,6 +40,14 @@ public class EmployeeController {
     @PostMapping
     ResponseEntity<Employee> insertEmployee(@RequestBody EmployeeDto newEmployeeDto){
         return ResponseEntity.ok().body(employeeService.insertNewEmployee(newEmployeeDto));
+    }
+
+
+    //TODO DELETE
+    @DeleteMapping("/{employeeEmail}")
+    ResponseEntity<String> deleteEmployee(@PathVariable String employeeEmail){
+        employeeService.deleteEmployee(employeeEmail);
+        return ResponseEntity.ok().body(String.format("%s was deleted!",employeeEmail));
     }
 
 }
